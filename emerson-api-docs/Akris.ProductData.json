@@ -1,0 +1,327 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "version": "1.8.11",
+    "title": "ProductData Service API"
+  },
+  "paths": {
+    "/products/{id}": {
+      "get": {
+        "tags": [
+          "x-public"
+        ],
+        "summary": "Retrieve single product data.",
+        "description": "Retrieves detailed product data for the specified product.",
+        "operationId": "GetById",
+        "consumes": [],
+        "produces": [],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "integer",
+            "format": "int32"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "$ref": "#/definitions/HttpServiceResponse-ProductResponse"
+            }
+          },
+          "400": {
+            "description": "An invalid or malformed request was sent."
+          },
+          "404": {
+            "description": "An invalid product ID was provided."
+          },
+          "429": {
+            "description": "The request rate limit has been exceeded."
+          },
+          "499": {
+            "description": "The request was aborted by the client before it could be completed."
+          },
+          "500": {
+            "description": "An internal error occurred while processing the request."
+          }
+        }
+      }
+    },
+    "/products": {
+      "get": {
+        "tags": [
+          "x-public"
+        ],
+        "summary": "Retrieve product data collection.",
+        "description": "Retrieves detailed product data for the all products.",
+        "operationId": "GetCollection",
+        "consumes": [],
+        "produces": [],
+        "parameters": [
+          {
+            "name": "startAfterId",
+            "in": "query",
+            "required": false,
+            "type": "integer",
+            "format": "int32"
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "type": "integer",
+            "format": "int32",
+            "maximum": 100,
+            "minimum": 1
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "$ref": "#/definitions/HttpServiceResponse-ProductCollectionResponse"
+            }
+          },
+          "400": {
+            "description": "An invalid or malformed request was sent."
+          },
+          "429": {
+            "description": "The request rate limit has been exceeded."
+          },
+          "499": {
+            "description": "The request was aborted by the client before it could be completed."
+          },
+          "500": {
+            "description": "An internal error occurred while processing the request."
+          }
+        }
+      }
+    }
+  },
+  "definitions": {
+    "HttpServiceResponse-ProductResponse": {
+      "type": "object",
+      "properties": {
+        "body": {
+          "$ref": "#/definitions/ProductResponse",
+          "x-public": true
+        },
+        "errorCode": {
+          "format": "int32",
+          "type": "integer",
+          "x-public": true
+        },
+        "errorMessage": {
+          "type": "string",
+          "x-public": true
+        }
+      }
+    },
+    "ProductResponse": {
+      "type": "object",
+      "properties": {
+        "productId": {
+          "format": "int32",
+          "type": "integer",
+          "x-public": true
+        },
+        "productName": {
+          "type": "string",
+          "x-public": true
+        },
+        "brand": {
+          "$ref": "#/definitions/Brand",
+          "x-public": true
+        },
+        "description": {
+          "type": "string",
+          "x-public": true
+        },
+        "labelText": {
+          "type": "string",
+          "x-public": true
+        },
+        "suggestedUse": {
+          "type": "string",
+          "x-public": true
+        },
+        "warnings": {
+          "type": "string",
+          "x-public": true
+        },
+        "deliveryMeasureName": {
+          "type": "string",
+          "x-public": true
+        },
+        "deliveryMeasureAbbreviation": {
+          "type": "string",
+          "x-public": true
+        },
+        "items": {
+          "uniqueItems": false,
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/ProductItem",
+            "x-public": true
+          },
+          "x-public": true
+        }
+      }
+    },
+    "Brand": {
+      "type": "object",
+      "properties": {
+        "brandId": {
+          "format": "int32",
+          "type": "integer",
+          "x-public": true
+        },
+        "brandName": {
+          "type": "string",
+          "x-public": true
+        }
+      }
+    },
+    "ProductItem": {
+      "type": "object",
+      "properties": {
+        "sku": {
+          "type": "string",
+          "x-public": true
+        },
+        "itemName": {
+          "type": "string",
+          "x-public": true
+        },
+        "status": {
+          "format": "int32",
+          "enum": [
+            1,
+            2,
+            3,
+            4
+          ],
+          "type": "integer",
+          "x-public": true
+        },
+        "upc": {
+          "type": "string",
+          "x-public": true
+        },
+        "prop65Restriction": {
+          "format": "int32",
+          "enum": [
+            1,
+            2,
+            3
+          ],
+          "type": "integer",
+          "x-public": true
+        },
+        "prop65AlternativeSku": {
+          "type": "string",
+          "x-public": true
+        },
+        "brandSku": {
+          "type": "string",
+          "x-public": true
+        },
+        "images": {
+          "uniqueItems": false,
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/ImageData",
+            "x-public": true
+          },
+          "x-public": true
+        }
+      }
+    },
+    "ImageData": {
+      "type": "object",
+      "properties": {
+        "url": {
+          "type": "string",
+          "x-public": true
+        },
+        "height": {
+          "format": "int32",
+          "type": "integer",
+          "x-public": true
+        },
+        "width": {
+          "format": "int32",
+          "type": "integer",
+          "x-public": true
+        }
+      }
+    },
+    "HttpServiceResponse-ProductCollectionResponse": {
+      "type": "object",
+      "properties": {
+        "body": {
+          "$ref": "#/definitions/ProductCollectionResponse",
+          "x-public": true
+        },
+        "errorCode": {
+          "format": "int32",
+          "type": "integer",
+          "x-public": true
+        },
+        "errorMessage": {
+          "type": "string",
+          "x-public": true
+        }
+      }
+    },
+    "ProductCollectionResponse": {
+      "type": "object",
+      "properties": {
+        "cursor": {
+          "$ref": "#/definitions/CursorResponse",
+          "x-public": true
+        },
+        "collection": {
+          "uniqueItems": false,
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/ProductResponse",
+            "x-public": true
+          },
+          "x-public": true
+        }
+      }
+    },
+    "CursorResponse": {
+      "type": "object",
+      "properties": {
+        "startAfterId": {
+          "format": "int32",
+          "type": "integer",
+          "x-public": true
+        },
+        "endsWithId": {
+          "format": "int32",
+          "type": "integer",
+          "x-public": true
+        },
+        "limit": {
+          "format": "int32",
+          "maximum": 100,
+          "minimum": 1,
+          "type": "integer",
+          "x-public": true
+        }
+      }
+    }
+  },
+  "securityDefinitions": {
+    "oauth2": {
+      "flow": "implicit",
+      "scopes": {},
+      "type": "oauth2"
+    }
+  }
+}

@@ -1,0 +1,10 @@
+Emerson Ecologics API Endpoint for Product data
+
+Type: GET
+Limit per query: [1-100]
+
+https://emerson-api.emersonecologics.com/productdata/v1/products?limit=100&startAfterId=0&endsWithId=99
+
+
+
+

@@ -1,0 +1,6 @@
+
+
+RewriteEngine On
+RewriteCond %{HTTP_HOST} emersonproductsync.wincmedia\.com [NC]
+RewriteCond %{SERVER_PORT} 80
+RewriteRule ^(.*)$ https://www.emersonproductsync.wincmedia.com/$1 [R,L]

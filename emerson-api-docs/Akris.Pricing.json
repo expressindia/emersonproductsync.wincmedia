@@ -1,0 +1,171 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "version": "1.8.10",
+    "title": "Pricing Service API"
+  },
+  "paths": {
+    "/pricing-request": {
+      "post": {
+        "tags": [
+          "x-public"
+        ],
+        "summary": "Request item prices.",
+        "description": "Given a list of SKUs, this endpoint will return pricing information for each item in the list. If no SKUs are passed, pricing for all items will be returned.",
+        "operationId": "GetItemPrices",
+        "consumes": [
+          "application/json-patch+json",
+          "application/json",
+          "text/json",
+          "application/*+json",
+          "application/x-protobuf"
+        ],
+        "produces": [],
+        "parameters": [
+          {
+            "name": "request",
+            "in": "body",
+            "required": false,
+            "schema": {
+              "$ref": "#/definitions/PublicPricingRequest"
+            }
+          },
+          {
+            "name": "startAfterId",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "type": "integer",
+            "format": "int32",
+            "default": 10,
+            "maximum": 100,
+            "minimum": 0
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "$ref": "#/definitions/HttpServiceResponse-PublicPricingResponse"
+            }
+          },
+          "400": {
+            "description": "An invalid or malformed request was sent."
+          },
+          "429": {
+            "description": "The request rate limit has been exceeded."
+          },
+          "499": {
+            "description": "The request was aborted by the client before it could be completed."
+          },
+          "500": {
+            "description": "An internal error occurred while processing the request."
+          }
+        }
+      }
+    }
+  },
+  "definitions": {
+    "PublicPricingRequest": {
+      "type": "object",
+      "properties": {
+        "skus": {
+          "uniqueItems": false,
+          "type": "array",
+          "items": {
+            "type": "string",
+            "x-public": true
+          },
+          "x-public": true
+        }
+      }
+    },
+    "HttpServiceResponse-PublicPricingResponse": {
+      "type": "object",
+      "properties": {
+        "body": {
+          "$ref": "#/definitions/PublicPricingResponse",
+          "x-public": true
+        },
+        "errorCode": {
+          "format": "int32",
+          "type": "integer",
+          "x-public": true
+        },
+        "errorMessage": {
+          "type": "string",
+          "x-public": true
+        }
+      }
+    },
+    "PublicPricingResponse": {
+      "required": [
+        "cursor",
+        "collection"
+      ],
+      "type": "object",
+      "properties": {
+        "cursor": {
+          "$ref": "#/definitions/Cursor",
+          "x-public": true
+        },
+        "collection": {
+          "uniqueItems": false,
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/CollectionItem",
+            "x-public": true
+          },
+          "x-public": true
+        }
+      }
+    },
+    "Cursor": {
+      "type": "object",
+      "properties": {
+        "startAfterId": {
+          "type": "string",
+          "x-public": true
+        },
+        "endsWithId": {
+          "type": "string",
+          "x-public": true
+        },
+        "limit": {
+          "format": "int32",
+          "type": "integer",
+          "x-public": true
+        }
+      }
+    },
+    "CollectionItem": {
+      "required": [
+        "sku"
+      ],
+      "type": "object",
+      "properties": {
+        "sku": {
+          "type": "string",
+          "x-public": true
+        },
+        "retailPrice": {
+          "format": "double",
+          "type": "number",
+          "x-public": true
+        }
+      }
+    }
+  },
+  "securityDefinitions": {
+    "oauth2": {
+      "flow": "implicit",
+      "scopes": {},
+      "type": "oauth2"
+    }
+  }
+}

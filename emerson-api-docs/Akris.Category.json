@@ -1,0 +1,163 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "version": "1.8.10",
+    "title": "Category Service API"
+  },
+  "paths": {
+    "/categories": {
+      "get": {
+        "tags": [
+          "x-public"
+        ],
+        "summary": "Retrieve category data.",
+        "description": "Retrieves a detailed list of all categories.",
+        "operationId": "GetCollection",
+        "consumes": [],
+        "produces": [],
+        "parameters": [
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "type": "integer",
+            "format": "int32",
+            "maximum": 100,
+            "minimum": 1
+          },
+          {
+            "name": "startAfterId",
+            "in": "query",
+            "required": false,
+            "type": "integer",
+            "format": "int32"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "$ref": "#/definitions/HttpServiceResponse-CategoryCollectionResponse"
+            }
+          },
+          "400": {
+            "description": "An invalid or malformed request was sent."
+          },
+          "429": {
+            "description": "The request rate limit has been exceeded."
+          },
+          "499": {
+            "description": "The request was aborted by the client before it could be completed."
+          },
+          "500": {
+            "description": "An internal error occurred while processing the request."
+          }
+        }
+      }
+    }
+  },
+  "definitions": {
+    "HttpServiceResponse-CategoryCollectionResponse": {
+      "type": "object",
+      "properties": {
+        "body": {
+          "$ref": "#/definitions/CategoryCollectionResponse",
+          "x-public": true
+        },
+        "errorCode": {
+          "format": "int32",
+          "type": "integer",
+          "x-public": true
+        },
+        "errorMessage": {
+          "type": "string",
+          "x-public": true
+        }
+      }
+    },
+    "CategoryCollectionResponse": {
+      "type": "object",
+      "properties": {
+        "cursor": {
+          "$ref": "#/definitions/CursorResponse",
+          "x-public": true
+        },
+        "collection": {
+          "uniqueItems": false,
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/CategoryResponse",
+            "x-public": true
+          },
+          "x-public": true
+        }
+      }
+    },
+    "CursorResponse": {
+      "type": "object",
+      "properties": {
+        "startAfterId": {
+          "format": "int32",
+          "type": "integer",
+          "x-public": true
+        },
+        "endsWithId": {
+          "format": "int32",
+          "type": "integer",
+          "x-public": true
+        },
+        "limit": {
+          "format": "int32",
+          "maximum": 100,
+          "minimum": 1,
+          "type": "integer",
+          "x-public": true
+        }
+      }
+    },
+    "CategoryResponse": {
+      "type": "object",
+      "properties": {
+        "categoryId": {
+          "format": "int32",
+          "type": "integer",
+          "x-public": true
+        },
+        "categoryName": {
+          "type": "string",
+          "x-public": true
+        },
+        "subcategories": {
+          "uniqueItems": false,
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/SubcategoryResponse",
+            "x-public": true
+          },
+          "x-public": true
+        }
+      }
+    },
+    "SubcategoryResponse": {
+      "type": "object",
+      "properties": {
+        "subcategoryId": {
+          "format": "int32",
+          "type": "integer",
+          "x-public": true
+        },
+        "subcategoryName": {
+          "type": "string",
+          "x-public": true
+        }
+      }
+    }
+  },
+  "securityDefinitions": {
+    "oauth2": {
+      "flow": "implicit",
+      "scopes": {},
+      "type": "oauth2"
+    }
+  }
+}

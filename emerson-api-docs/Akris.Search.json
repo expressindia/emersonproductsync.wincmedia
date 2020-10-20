@@ -1,0 +1,349 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "version": "1.8.12",
+    "title": "Search Service API"
+  },
+  "paths": {
+    "/search-request": {
+      "post": {
+        "tags": [
+          "x-public"
+        ],
+        "summary": "Search Base on Practitioner Doc Type",
+        "description": "With Request, this endpoint will need authentication from Wellevate and pass back the products within doc type dispensary.",
+        "operationId": "SearchRequest",
+        "consumes": [
+          "application/json-patch+json",
+          "application/json",
+          "text/json",
+          "application/*+json",
+          "application/x-protobuf"
+        ],
+        "produces": [],
+        "parameters": [
+          {
+            "name": "searchRequest",
+            "in": "body",
+            "required": false,
+            "schema": {
+              "$ref": "#/definitions/SearchRequest"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "$ref": "#/definitions/HttpServiceResponse-SearchResponse"
+            }
+          },
+          "400": {
+            "description": "An invalid or malformed request was sent."
+          },
+          "401": {
+            "description": "The request is not authorized."
+          },
+          "403": {
+            "description": "The request is not authorized."
+          },
+          "429": {
+            "description": "The request rate limit has been exceeded."
+          },
+          "499": {
+            "description": "The request was aborted by the client before it could be completed."
+          },
+          "500": {
+            "description": "An internal error occurred while processing the request."
+          }
+        },
+        "security": [
+          {
+            "oauth2": [
+              "search_products"
+            ]
+          }
+        ]
+      }
+    }
+  },
+  "definitions": {
+    "Address": {
+      "type": "object",
+      "properties": {
+        "recipientName": {
+          "type": "string",
+          "x-public": true
+        },
+        "street1": {
+          "type": "string",
+          "x-public": true
+        },
+        "street2": {
+          "type": "string",
+          "x-public": true
+        },
+        "city": {
+          "type": "string",
+          "x-public": true
+        },
+        "regionCode": {
+          "type": "string",
+          "x-public": true
+        },
+        "postalCode": {
+          "type": "string",
+          "x-public": true
+        },
+        "countryCode": {
+          "type": "string",
+          "x-public": true
+        },
+        "addressType": {
+          "format": "int32",
+          "enum": [
+            1,
+            2,
+            3
+          ],
+          "type": "integer",
+          "x-public": true
+        }
+      }
+    },
+    "SearchRequest": {
+      "type": "object",
+      "properties": {
+        "searchTerm": {
+          "type": "string",
+          "x-public": true
+        },
+        "pageSize": {
+          "format": "int32",
+          "maximum": 100,
+          "minimum": 1,
+          "type": "integer",
+          "x-public": true
+        },
+        "pageNumber": {
+          "format": "int32",
+          "type": "integer",
+          "x-public": true
+        },
+        "sortOrder": {
+          "format": "int32",
+          "enum": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6
+          ],
+          "type": "integer",
+          "x-public": true
+        },
+        "isSortAscending": {
+          "type": "boolean",
+          "x-public": true
+        },
+        "brands": {
+          "uniqueItems": false,
+          "type": "array",
+          "items": {
+            "format": "int32",
+            "type": "integer",
+            "x-public": true
+          },
+          "x-public": true
+        },
+        "categories": {
+          "uniqueItems": false,
+          "type": "array",
+          "items": {
+            "format": "int32",
+            "type": "integer",
+            "x-public": true
+          },
+          "x-public": true
+        },
+        "subcategories": {
+          "uniqueItems": false,
+          "type": "array",
+          "items": {
+            "format": "int32",
+            "type": "integer",
+            "x-public": true
+          },
+          "x-public": true
+        },
+        "shippingAddress": {
+          "$ref": "#/definitions/Address",
+          "x-public": true
+        },
+        "hasItemStatuses": {
+          "uniqueItems": false,
+          "type": "array",
+          "items": {
+            "format": "int32",
+            "type": "integer",
+            "x-public": true
+          },
+          "x-public": true
+        }
+      }
+    },
+    "HttpServiceResponse-SearchResponse": {
+      "type": "object",
+      "properties": {
+        "body": {
+          "$ref": "#/definitions/SearchResponse",
+          "x-public": true
+        },
+        "errorCode": {
+          "format": "int32",
+          "type": "integer",
+          "x-public": true
+        },
+        "errorMessage": {
+          "type": "string",
+          "x-public": true
+        }
+      }
+    },
+    "SearchResponse": {
+      "type": "object",
+      "properties": {
+        "searchTerm": {
+          "type": "string",
+          "x-public": true
+        },
+        "pageSize": {
+          "format": "int32",
+          "type": "integer",
+          "x-public": true
+        },
+        "pageNumber": {
+          "format": "int32",
+          "type": "integer",
+          "x-public": true
+        },
+        "collection": {
+          "uniqueItems": false,
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/ProductResponse",
+            "x-public": true
+          },
+          "x-public": true
+        }
+      }
+    },
+    "ProductResponse": {
+      "type": "object",
+      "properties": {
+        "productId": {
+          "format": "int32",
+          "type": "integer",
+          "x-public": true
+        },
+        "productName": {
+          "type": "string",
+          "x-public": true
+        },
+        "brand": {
+          "$ref": "#/definitions/Brand",
+          "x-public": true
+        },
+        "deliveryMeasureName": {
+          "type": "string",
+          "x-public": true
+        },
+        "deliveryMeasureAbbreviation": {
+          "type": "string",
+          "x-public": true
+        },
+        "items": {
+          "uniqueItems": false,
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/ProductItem",
+            "x-public": true
+          },
+          "x-public": true
+        }
+      }
+    },
+    "Brand": {
+      "type": "object",
+      "properties": {
+        "brandId": {
+          "format": "int32",
+          "type": "integer",
+          "x-public": true
+        },
+        "brandName": {
+          "type": "string",
+          "x-public": true
+        }
+      }
+    },
+    "ProductItem": {
+      "type": "object",
+      "properties": {
+        "sku": {
+          "type": "string",
+          "x-public": true
+        },
+        "itemName": {
+          "type": "string",
+          "x-public": true
+        },
+        "status": {
+          "format": "int32",
+          "enum": [
+            1,
+            2,
+            3,
+            4
+          ],
+          "type": "integer",
+          "x-public": true
+        },
+        "upc": {
+          "type": "string",
+          "x-public": true
+        },
+        "prop65Restriction": {
+          "format": "int32",
+          "enum": [
+            1,
+            2,
+            3
+          ],
+          "type": "integer",
+          "x-public": true
+        },
+        "brandSku": {
+          "type": "string",
+          "x-public": true
+        },
+        "retailPrice": {
+          "format": "double",
+          "type": "number",
+          "x-public": true
+        }
+      }
+    }
+  },
+  "securityDefinitions": {
+    "oauth2": {
+      "flow": "implicit",
+      "scopes": {
+        "search_products": "Search Base on Practitioner Doc Type"
+      },
+      "type": "oauth2"
+    }
+  }
+}
