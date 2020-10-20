@@ -1,7 +1,13 @@
 <!-- welcome mohammed! -->
 <?php
 
-// php stuff :) 
+// php stuff :)
+$results = json_decode(file_get_contents('https://emerson-api.emersonecologics.com/productdata/v1/products?limit=2&startAfterId=0&endsWithId=99'));
+// echo "<pre>";
+// print_r($results->body->collection);
+// echo "</pre>";
+//echo $results->info->version;
+
 
 ?>
 <!DOCTYPE html>
@@ -33,7 +39,114 @@
     <div class="container-fluid">
         <div class="container" id="mainContainer">
             <h1 class="text-light">Query Results Page<h1>
-            <?php require_once("resultsTable.html") ?>
+            <?php //require_once("resultsTable.html") ?>
+            <div class="table-responsive">
+
+              <table class="table table-condensed table-striped table-dark">
+                <thead class="thead-dark">
+                  <tr>
+                    <th scope="col">productID</th>
+                    <th scope="col">productName</th>
+                    <th scope="col">brandID</th>
+                    <th scope="col">description</th>
+                    <th scope="col">labelText</th>
+                    <th scope="col">suggestedUse</th>
+                    <th scope="col">warnings</th>
+                    <th scope="col">deliveryMeasure</th>
+                    <th scope="col">sku</th>
+                    <th scope="col">itemName</th>
+                    <th scope="col">itemStatus</th>
+                    <th scope="col">itemUPC</th>
+                    <th scope="col">itemProp65Restriction</th>
+                    <th scope="col">itemProp65Alternative</th>
+                    <th scope="col">itemBrandSku</th>
+                    <th scope="col">itemImageUrl</th>
+                    <th scope="col">itemImageHeight</th>
+                    <th scope="col">itemImageWidth</th>
+                    <th scope="col">itemImagePresent</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <?php
+
+                    foreach($results->body->collection as $product){
+
+                      // displaying product image
+                      $sku = '';
+                      $item_name = '';
+                      $item_status = '';
+                      $item_upc = '';
+                      $item_prop65Restriction = '';
+                      $item_prop65AlternativeSku = '';
+                      $item_brandSku = '';
+
+                      // dispaying images
+                      $image_url = '';
+                      $image_height = '';
+                      $image_width = '';
+                      $image_present = '';
+
+                      foreach($product->items as $item){
+                        $sku .= $item->sku.', ';
+                        $item_name .= $item->itemName.', ';
+                        $item_status .= $item->status.', ';
+                        $item_upc .= $item->upc.', ';
+                        $item_prop65Restriction .= $item->prop65Restriction.', ';
+                        $item_prop65AlternativeSku .= $item->prop65AlternativeSku.', ';
+                        $item_brandSku .= $item->brandSku.', ';
+
+
+
+                        foreach($item->images as $image){
+                          $image_url .= $image->url . ', ';
+                          $image_height .= $image->height . ', ';
+                          $image_width .= $image->width . ', ';
+
+                          $image_present .= '<img src="'.$image->url.'" width="50" height="50">';
+                        }
+                      }
+                  ?>
+
+                    <tr>
+                      <th scope="row"><?php echo $product->productId; ?></th>
+                      <td><?php echo $product->productName; ?></td>
+                      <td><?php echo $product->brand->brandId; ?></td>
+                      <td><?php echo $product->description; ?> </td>
+                      <td><?php echo $product->labelText; ?> </td>
+                      <td><?php echo $product->suggestedUse; ?> </td>
+                      <td><?php echo $product->warnings; ?></td>
+                      <td><?php echo $product->deliveryMeasureName; ?> </td>
+                      <td><?php echo $sku; ?> </td>
+                      <td><?php echo $item_name ?> </td>
+                      <td><?php echo $item_status; ?> </td>
+                      <td><?php echo $item_upc; ?> </td>
+                      <td><?php echo $item_prop65Restriction; ?> </td>
+                      <td><?php echo $item_prop65AlternativeSku; ?></td>
+                      <td><?php echo $item_brandSku; ?></td>
+                      <td><?php echo $image_url; ?> </td>
+                      <td><?php echo $image_height; ?> </td>
+                      <td><?php echo $image_width; ?> </td>
+                      <td> <?php echo $image_present; ?> </td>
+
+                    </tr>
+                  <?php }?>
+                  <!-- <tr>
+                    <th scope="row">2</th>
+                    <td>Jacob</td>
+                    <td>Thornton</td>
+                    <td>@fat</td>
+                  </tr>
+                  <tr>
+                    <th scope="row">3</th>
+                    <td>Larry</td>
+                    <td>the Bird</td>
+                    <td>@twitter</td>
+                  </tr> -->
+                </tbody>
+              </table>
+            </div>
+
+
         </div>
     </div>
 
