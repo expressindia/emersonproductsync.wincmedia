@@ -2,7 +2,7 @@
 <?php
 
 // php stuff :)
-$results = json_decode(file_get_contents('https://emerson-api.emersonecologics.com/productdata/v1/products?limit=2&startAfterId=0&endsWithId=99'));
+$results = json_decode(file_get_contents('https://emerson-api.emersonecologics.com/productdata/v1/products?limit=100&startAfterId=0&endsWithId=99'));
 // echo "<pre>";
 // print_r($results->body->collection);
 // echo "</pre>";
@@ -38,7 +38,7 @@ $results = json_decode(file_get_contents('https://emerson-api.emersonecologics.c
 
     <div class="container-fluid">
         <div class="container" id="mainContainer">
-            <h1 class="text-light">Query Results Page<h1>
+            <h1 class="text-light">Query Results Page</h1>
             <?php //require_once("resultsTable.html") ?>
             <div class="table-responsive">
 
@@ -147,6 +147,22 @@ $results = json_decode(file_get_contents('https://emerson-api.emersonecologics.c
             </div>
 
 
+        </div>
+        <style>
+        ul#pagination li {
+          display:inline;
+        }
+        </style>
+        <div style="text-align:center; color:white; padding:30px;">
+          <h1>Pagination</h1>
+          <ul id="pagination">
+            <li><a href="">1</a></li>
+            <li><a href="">2</a></li>
+            <li><a href="">3</a></li>
+            <li><a href="">4</a></li>
+            <li><a href="">5</a></li>
+            <li><a href="">6</a></li>
+          </ul>
         </div>
     </div>
 

@@ -1,7 +1,60 @@
-<!-- welcome mohammed! -->
 <?php
+// Database connection
+include_once('db.php');
 
-// php stuff :) 
+///Select query from products table
+
+$sql = "SELECT * FROM Products ";
+$result = $mysqli->query($sql);
+
+if ($result->num_rows > 0) {
+  while($row = $result->fetch_assoc()) {
+    echo "id: " . $row["productID"]. " - Name: " . $row["productName"]. " " . $row["brandID"]. "<br>";
+  }
+} else {
+  echo "0 results";
+}
+$mysqli->close();
+
+
+
+
+
+
+//insert query from product table
+
+$sql = "INSERT INTO Products (productID, productName, brandID, description, labelText, suggestedUse, warnings,
+                              deliveryMeasure, sku, itemName, itemStatus, itemUPC, itemProp65Restriction,
+                              itemProp65Alternative, itemBrandSku, itemImageURL, itemImageHeight, itemImageWidth,
+                              itemImagePresent)
+VALUES ('2',
+        '1 Potassium Trace Minerals',
+        '921',
+        'DIetary Supplement Potassium is essential for healthy cell function, nerve transmission and pH balance.',
+        'test',
+        'Suggested Use:As a mineral supplement, add 13 drops in water or juice daily or more as directed by a licensed healthcare practitioner.',
+        'Keep out of the reach of children. Store in a cool, dry place.',
+        'Ounces',
+        'POT10, POTA8,',
+        '1 Potassium Trace Minerals 4 oz, 1 Potassium Trace Minerals 2 oz,',
+        '1, 1,',
+        '743474440117, 743474220115,',
+        '1',
+        '2',
+        'LM401, LM201,',
+        'https://static.emersonecologics.com/c8e3d146-7ba3-47f3-90b1-ed602cdf16c5-358-358.png, https://static.emersonecologics.com/08663f7b-a352-4ad3-acbc-a6e645b38dc0-358-358.png',
+        '358, 358,',
+        '358, 358,',
+        'https://static.emersonecologics.com/c8e3d146-7ba3-47f3-90b1-ed602cdf16c5-358-358.png'
+       )";
+
+if ($mysqli->query($sql) === TRUE) {
+  echo "New record created successfully";
+} else {
+  echo "Error: " . $sql . "<br>" . $mysqli->error;
+}
+
+$mysqli->close();
 
 ?>
 <!DOCTYPE html>
