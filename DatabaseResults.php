@@ -2,10 +2,10 @@
 <?php
 
 // php stuff :)
-$results = json_decode(file_get_contents('https://emerson-api.emersonecologics.com/productdata/v1/products?limit=100&startAfterId=0&endsWithId=99'));
+$results = json_decode(file_get_contents('https://emerson-api.emersonecologics.com/productdata/v1/products?limit=2&startAfterId=0&endsWithId=99'));
 // echo "<pre>";
-// print_r($results->body->collection);
-// echo "</pre>";
+// print_r($results);
+// echo "<pre>";
 //echo $results->info->version;
 
 
@@ -87,6 +87,7 @@ $results = json_decode(file_get_contents('https://emerson-api.emersonecologics.c
                       $image_present = '';
 
                       foreach($product->items as $item){
+
                         $sku .= $item->sku.', ';
                         $item_name .= $item->itemName.', ';
                         $item_status .= $item->status.', ';
@@ -96,7 +97,6 @@ $results = json_decode(file_get_contents('https://emerson-api.emersonecologics.c
                         $item_brandSku .= $item->brandSku.', ';
 
 
-
                         foreach($item->images as $image){
                           $image_url .= $image->url . ', ';
                           $image_height .= $image->height . ', ';
@@ -104,7 +104,54 @@ $results = json_decode(file_get_contents('https://emerson-api.emersonecologics.c
 
                           $image_present .= '<img src="'.$image->url.'" width="50" height="50">';
                         }
+
+                        $data = array(
+                           'productId' => $product->productId,
+                           'productName' => $product->productName,
+                           'brandID' => $product->brand->brandId,
+                           'description'=> $product->description,
+                           'labelText'=> '$product->labelText',
+                           'suggestedUse'=> $product->suggestedUse,
+                           'warnings'=> $product->warnings,
+                           'deliveryMeasure'=> $product->deliveryMeasureName,
+                           'sku'=> $item->sku,
+                           'itemName'=> $item->itemName,
+                           'itemStatus'=> $item->status,
+                           'itemUPC'=> $item->upc,
+                           'itemProp65Restriction'=> $item->prop65Restriction,
+                           'itemProp65Alternative'=> $item->prop65AlternativeSku,
+                           'itemBrandSku'=> $item->brandSku,
+                           'itemImageURL'=> $image->url,
+                           'itemImageHeight'=> $image->height,
+                           'itemImageWidth'=> $image->width,
+                           'itemImagePresent'=> '1'
+                       );
+
+
+
+
+
+
+                        $columns = implode(", ",array_keys($data));
+
+                        foreach($data as $k => $v) {
+                        //$data[$k] = $mysqli->real_escape_string($v);
+                        $data[$k] = $v;
+
+
+                        // foreach ($escaped_values as $idx=>$data) $escaped_values[$idx] = "'".$data."'";
+                        // $values  = implode(", ", $escaped_values);
+                        // $sql = "INSERT INTO $tableName ($columns) VALUES ($values)";
+                        // $mysqli->query($sql);
+                        // $mysqli->close();
+
+
+                        }
+
                       }
+
+
+
                   ?>
 
                     <tr>
@@ -129,7 +176,9 @@ $results = json_decode(file_get_contents('https://emerson-api.emersonecologics.c
                       <td> <?php echo $image_present; ?> </td>
 
                     </tr>
-                  <?php }?>
+
+                  <?php } echo "<pre>";
+                  print_r($data);die;?>
                   <!-- <tr>
                     <th scope="row">2</th>
                     <td>Jacob</td>
