@@ -55,11 +55,13 @@ foreach($results->body->collection as $product){
         $image_url = $image->url;
         $image_height = $image->height;
         $image_width = $image->width;
+        $itemImagePresent = 1;
       }
     }else{
       $image_url = '#';
       $image_height = 358;
       $image_width = 358;
+      $itemImagePresent = 0;
     }
 
 
@@ -83,7 +85,7 @@ foreach($results->body->collection as $product){
        'itemImageURL'=> $image_url,
        'itemImageHeight'=> $image_height,
        'itemImageWidth'=> $image_width,
-       'itemImagePresent'=> '1'
+       'itemImagePresent'=> '0'
    );
 
 
@@ -97,7 +99,7 @@ foreach($results->body->collection as $product){
     $sql = "INSERT INTO $tableName ($columns) VALUES ($values)";
     $count = $i++;
 
-    echo $count."<br>".$sql;
+    //echo $count."<br>".$sql;
     mysqli_query($con, $sql);
 
   }
