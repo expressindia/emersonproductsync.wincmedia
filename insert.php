@@ -1,97 +1,110 @@
-<!-- welcome mohammed! -->
 <?php
-
+include_once('db.php');
 // php stuff :)
-$results = json_decode(file_get_contents('https://emerson-api.emersonecologics.com/productdata/v1/products?limit=2&startAfterId=0&endsWithId=99'));
-// echo "<pre>";
-// print_r($results);
-// echo "<pre>";
-//echo $results->info->version;
+$results = json_decode(file_get_contents('products.json'));
 
+// echo "<pre>";
+// print_r($results->body->collection);
+// echo "<pre>";die;
+///echo $results->info->version;
+
+$tableName = 'Products';
+
+$i = 0;
 foreach($results->body->collection as $product){
 
-  // displaying product image
-  $sku = '';
-  $item_name = '';
-  $item_status = '';
-  $item_upc = '';
-  $item_prop65Restriction = '';
-  $item_prop65AlternativeSku = '';
-  $item_brandSku = '';
+  if($product->labelText != '' || $product->labelText != NULL){
+    $labelText = $product->labelText;
+  }else{
+    $labelText = '';
+  }
+  if($product->suggestedUse != '' || $product->suggestedUse != NULL){
+    $suggestedUse = $product->suggestedUse;
+  }else{
+    $suggestedUse = '';
+  }
 
-  // dispaying images
-  $image_url = '';
-  $image_height = '';
-  $image_width = '';
-  $image_present = '';
+  if($product->warnings != '' || $product->warnings != NULL){
+    $warnings = $product->warnings;
+  }else{
+    $warnings = '';
+  }
+  if($product->deliveryMeasureName != '' || $product->deliveryMeasureName != NULL){
+    $deliveryMeasureName = $product->deliveryMeasureName;
+  }else{
+    $deliveryMeasureName = '';
+  }
 
+
+// Product Items
   foreach($product->items as $item){
 
-    $sku .= $item->sku.', ';
-    $item_name .= $item->itemName.', ';
-    $item_status .= $item->status.', ';
-    $item_upc .= $item->upc.', ';
-    $item_prop65Restriction .= $item->prop65Restriction.', ';
-    $item_prop65AlternativeSku .= $item->prop65AlternativeSku.', ';
-    $item_brandSku .= $item->brandSku.', ';
-
-
-    foreach($item->images as $image){
-      $image_url .= $image->url . ', ';
-      $image_height .= $image->height . ', ';
-      $image_width .= $image->width . ', ';
-
-      $image_present .= '<img src="'.$image->url.'" width="50" height="50">';
+    if($item->prop65Restriction !='' || $item->prop65Restriction != NULL){
+      $prop65Restriction = $item->prop65Restriction;
+    }else{
+      $prop65Restriction = '';
+    }
+    if($item->prop65AlternativeSku != '' || $item->prop65AlternativeSku != NULL){
+      $prop65AlternativeSku = $item->prop65AlternativeSku;
+    }else{
+      $prop65AlternativeSku = '';
     }
 
-    $data = array(
+    if($item->images != null ){
+      foreach($item->images as $image){
+        $image_url = $image->url;
+        $image_height = $image->height;
+        $image_width = $image->width;
+      }
+    }else{
+      $image_url = '#';
+      $image_height = 358;
+      $image_width = 358;
+    }
+
+
+    $dataArr = array(
        'productId' => $product->productId,
        'productName' => $product->productName,
        'brandID' => $product->brand->brandId,
+       'brandName' => $product->brand->brandName,
        'description'=> $product->description,
-       'labelText'=> '$product->labelText',
-       'suggestedUse'=> $product->suggestedUse,
-       'warnings'=> $product->warnings,
-       'deliveryMeasure'=> $product->deliveryMeasureName,
+       'labelText'=> $labelText,
+       'suggestedUse'=> $suggestedUse,
+       'warnings'=> $warnings,
+       'deliveryMeasure'=> $deliveryMeasureName,
        'sku'=> $item->sku,
        'itemName'=> $item->itemName,
        'itemStatus'=> $item->status,
        'itemUPC'=> $item->upc,
-       'itemProp65Restriction'=> $item->prop65Restriction,
-       'itemProp65Alternative'=> $item->prop65AlternativeSku,
+       'itemProp65Restriction'=> $prop65Restriction,
+       'itemProp65Alternative'=> $prop65AlternativeSku,
        'itemBrandSku'=> $item->brandSku,
-       'itemImageURL'=> $image->url,
-       'itemImageHeight'=> $image->height,
-       'itemImageWidth'=> $image->width,
+       'itemImageURL'=> $image_url,
+       'itemImageHeight'=> $image_height,
+       'itemImageWidth'=> $image_width,
        'itemImagePresent'=> '1'
    );
 
 
+    $columns = implode(", ",array_keys($dataArr));
 
-
-
-
-    $columns = implode(", ",array_keys($data));
-
-    foreach($data as $k => $v) {
-    //$data[$k] = $mysqli->real_escape_string($v);
-    $data[$k] = $v;
-
-
-    // foreach ($escaped_values as $idx=>$data) $escaped_values[$idx] = "'".$data."'";
-    // $values  = implode(", ", $escaped_values);
-    // $sql = "INSERT INTO $tableName ($columns) VALUES ($values)";
-    // $mysqli->query($sql);
-    // $mysqli->close();
-
-
+    foreach ($dataArr as $key=>$data) {
+      $data = mysqli_real_escape_string($con, $data);
+      $dataArr[$key] = "'".$data."'";
     }
+    $values  = implode(", ", $dataArr);
+    $sql = "INSERT INTO $tableName ($columns) VALUES ($values)";
+    $count = $i++;
+
+    echo $count."<br>".$sql;
+    mysqli_query($con, $sql);
 
   }
 
-  echo "<pre>";
-  print_r($data);
-  echo "<pre>";
+  // echo "<pre>";
+  // print_r($data);
+  // echo "<pre>";
 
 }
 
@@ -107,7 +120,7 @@ foreach($results->body->collection as $product){
 <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <title>Query Results | Curated Supplements</title>
+    <title>Insert Products Values Into Databbase | Curated Supplements</title>
     <meta name="description" content="Curated Supplements Product Database (sync'ed with emerson ecologics)">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="css/bootstrap.min.css">

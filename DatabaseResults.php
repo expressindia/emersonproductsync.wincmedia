@@ -48,6 +48,7 @@ $results = json_decode(file_get_contents('https://emerson-api.emersonecologics.c
                     <th scope="col">productID</th>
                     <th scope="col">productName</th>
                     <th scope="col">brandID</th>
+                    <th scope="col">brandName</th>
                     <th scope="col">description</th>
                     <th scope="col">labelText</th>
                     <th scope="col">suggestedUse</th>
@@ -109,6 +110,7 @@ $results = json_decode(file_get_contents('https://emerson-api.emersonecologics.c
                            'productId' => $product->productId,
                            'productName' => $product->productName,
                            'brandID' => $product->brand->brandId,
+                           'brandName' => $product->brand->brandName,
                            'description'=> $product->description,
                            'labelText'=> '$product->labelText',
                            'suggestedUse'=> $product->suggestedUse,
@@ -158,6 +160,7 @@ $results = json_decode(file_get_contents('https://emerson-api.emersonecologics.c
                       <th scope="row"><?php echo $product->productId; ?></th>
                       <td><?php echo $product->productName; ?></td>
                       <td><?php echo $product->brand->brandId; ?></td>
+                      <td><?php echo $product->brand->brandName; ?></td>
                       <td><?php echo $product->description; ?> </td>
                       <td><?php echo $product->labelText; ?> </td>
                       <td><?php echo $product->suggestedUse; ?> </td>
